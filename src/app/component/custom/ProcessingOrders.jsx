@@ -10,70 +10,27 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
-
-// const orders = [
-//   {
-//     id: "ORD-1284",
-//     customer: "Sarah Johnson",
-//     service: "Wash & Fold",
-//     status: "in-progress",
-//     amount: "$45.00",
-//     time: "2h ago",
-//   },
-//   {
-//     id: "ORD-1283",
-//     customer: "Michael Chen",
-//     service: "Dry Cleaning",
-//     status: "ready",
-//     amount: "$89.50",
-//     time: "3h ago",
-//   },
-//   {
-//     id: "ORD-1282",
-//     customer: "Emily Davis",
-//     service: "Express Wash",
-//     status: "in-progress",
-//     amount: "$62.00",
-//     time: "4h ago",
-//   },
-//   {
-//     id: "ORD-1281",
-//     customer: "James Wilson",
-//     service: "Ironing",
-//     status: "completed",
-//     amount: "$34.00",
-//     time: "5h ago",
-//   },
-//   {
-//     id: "ORD-1280",
-//     customer: "Lisa Anderson",
-//     service: "Alterations",
-//     status: "pending",
-//     amount: "$125.00",
-//     time: "6h ago",
-//   },
-// ]
-
-
+import Link from "next/link";
 
 const statusConfig = {
-  "in-progress": { label: "In Progress", variant: "default" },
+  "in progress": { label: "In Progress", variant: "default" },
   ready: { label: "Ready", variant: "default" },
   completed: { label: "Completed", variant: "secondary" },
   pending: { label: "Pending", variant: "outline" },
 }
 
-export function RecentOrders() {
-    const [orders, setOrders] = useState([])
+export function ProcessingOrders() {
+  const [orders, setOrders] = useState([])
+  const unfinishedOrders = orders.status == "pending" ||  orders.status == "in progress" // dito ka nagtapos nyahahahahha
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const query = onSnapshot(collection(db,'orders'), (snapshot) => {
-            setOrders(
-                snapshot.docs.map((doc)=>(
-                    {...doc.data(), id: doc.id}
-                )))
+        const query = onSnapshot(collection(db, 'orders'), (snapshot) => {
+          setOrders(
+            snapshot.docs.map((doc) => (
+              { ...doc.data(), id: doc.id }
+            )))
         })
         console.log("Fetch success")
       } catch (error) {
@@ -82,16 +39,15 @@ export function RecentOrders() {
     }
     getData()
   }, []);
+
+  console.log(unfinishedOrders)
+
   return (
-    // <>
-    // {orders.map((order)=>(
-    //   <h1>{order.id}</h1>
-    // ))}
-    // </>
+
     <Card className="p-10 w-full">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-foreground mb-1">Recent Orders</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-1">Orders Pending/In Progress</h3>
           <p className="text-sm text-muted-foreground">Latest customer orders and their status</p>
         </div>
         <Button variant="ghost" size="sm" className="gap-1">
@@ -102,14 +58,21 @@ export function RecentOrders() {
 
       <div className="space-y-4">
         {orders.map((order) => (
-          <div
+          <Link
+            href={`/admin/${order.id}`}
             key={order.id}
             className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors"
           >
             <div className="flex items-center gap-4 flex-1">
               <div className="flex flex-col gap-1 min-w-[100px]">
                 <span className="text-sm font-mono font-medium text-foreground">{order.orderNo}</span>
-                <span className="text-xs text-muted-foreground">{order.time}</span>
+                <span className="text-xs text-muted-foreground">{order.time.toDate().toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                }
+
+                )
+                }</span>
               </div>
 
               <div className="flex flex-col gap-1 flex-1">
@@ -127,7 +90,7 @@ export function RecentOrders() {
             <Button variant="ghost" size="icon" className="ml-2">
               <ChevronRight className="h-4 w-4" />
             </Button>
-          </div>
+          </Link>
         ))}
       </div>
     </Card>

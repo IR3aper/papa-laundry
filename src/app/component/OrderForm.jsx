@@ -1,5 +1,6 @@
 'use client'
 
+import { serverTimestamp } from '@firebase/firestore';
 
 import { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
@@ -13,42 +14,36 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea"
 
-// import db from "../utils/firestore"
-// import {collection, addDoc} from '@firebase/firestore'
+import db from "../utils/firestore"
+import {collection, addDoc} from '@firebase/firestore'
 
 
 
 export default function OrderForm() {
-  useEffect(()=>{
-    const currentNo = Number(localStorage.getItem("currentOrderNo"));
-  },[])
+
+    const getCurrentNo = Number(localStorage.getItem("currentOrderNo"));
+    const currentNo = !getCurrentNo ? 1 : getCurrentNo
+
+    const [orders, setOrders] = useState([])
+    const [orderNo, setOrderNo] = useState(!currentNo ? 1 : currentNo)
+    const [orderService, setOrderService] = useState("")  
+    const [orderWeight, setOrderWeight] = useState(0)
+    const [orderNotes, setOrderNotes] = useState("")
+    const [orderCustomer, setOrderCustomer] = useState("")
+    const [orderTime, setOrderTime] = useState("")
+
   const OPTIONS = [
     { id: "laundry_wash", label: "Regular Wash", value: "wash" },
     { id: "laundry_dry_clean", label: "Dry Clean", value: "dry" },
-    { id: "laundry_iron", label: "Iron", value: "iron" },
-    { id: "laundry_fold", label: "Fold", value: "fold" },
+    // { id: "laundry_iron", label: "Iron", value: "iron" },
+    // { id: "laundry_fold", label: "Fold", value: "fold" },
     { id: "laundry_full", label: "Full Service", value: "full" },
     {id: "laundry_specialty", label: "Specialty Items", value: "specialty"}
   ];
 
-  const [orders, setOrders] = useState([])
-  const [orderNo, setOrderNo] = useState(!currentNo ? 1 : currentNo)
-  const [orderService, setOrderService] = useState("")
-  const [orderWeight, setOrderWeight] = useState(0)
-  const [orderNotes, setOrderNotes] = useState("")
-  const [orderCustomer, setOrderCustomer] = useState("")
-  const [orderTime, setOrderTime] = useState("")
-
-  // let order = {
-  //       id: orderId,
-  //       service: orderService,
-  //       weight: orderWeight,
-  //       notes: orderNotes,
-  //       status: "pending"
-  // }
 
   const handleOrder = async (e) => {
-    // e.preventDefault()
+    e.preventDefault()
     try {
       const docref = await addDoc(collection(db, 'orders'), 
      {
@@ -58,7 +53,7 @@ export default function OrderForm() {
         notes: orderNotes,
         status: "pending",
         customer: "Juan Dela Cruz",
-        time: "",
+        time: new Date(),
         amount: "$1000.00"
      })
 
@@ -104,7 +99,7 @@ export default function OrderForm() {
         className="resize-none w-100 h-35" />
       </div>
 
-      <Button className="bg-emerald-500 w-full" type="submit">Submit</Button>
+      <Button className="bg-emerald-500 w-full" type="submit">Book it!</Button>
     </form>
 
     //  <form className="flex flex-col items-center shadow-xl p-10 gap-10 text-slate-700">

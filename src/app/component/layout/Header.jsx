@@ -1,10 +1,11 @@
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 //import { Button } from "@/components/ui/button"
 
 export default function Header() {
   const navBtns = [
     { id: "nav_services", text: "Services", link: "/home/laundry-services"  },
-    { id: "nav_order", text: "Book an Order", link: "/home/order" },
+    { id: "nav_order", text: "Book Now", link: "/home/order" },
     { id: "nav_tutorial", text: "About Us", link: "/home/about-us" },
   ];
   return (
@@ -20,9 +21,11 @@ export default function Header() {
         </ul>
       </nav>
       <div className="flex gap-5 justify-center items-center">
-        <Link href="/home/login" className="text-md font-medium text-foreground/80 hover:text-foreground transition-colors">Log In</Link>
-        <Link href="/home/register">
-       
+        <Link href="/home/login" className="text-md font-medium text-foreground/80 hover:text-foreground transition-colors">
+        Log In
+        </Link>
+        <Link href="/home/login" className="text-md font-medium text-foreground/80 hover:text-foreground transition-colors">
+        <Button className='bg-slate-700'>Register</Button>
         </Link>
      </div>
     </header>
