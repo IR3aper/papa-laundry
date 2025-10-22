@@ -1,4 +1,4 @@
-import { Shirt, Wind, Droplets, Sparkles } from "lucide-react";
+import { Shirt, Wind, Star, Sparkles } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -10,7 +10,7 @@ import {
 const services = [
   {
     icon: Shirt,
-    title: "Wash & Fold",
+    title: "Regular Wash",
     description:
       "Your everyday laundry washed, dried, and neatly folded. Perfect for busy lifestyles.",
     features: [
@@ -31,39 +31,25 @@ const services = [
     ],
   },
   {
-    icon: Droplets,
-    title: "Wash & Iron",
-    description:
-      "Crisp, professionally pressed shirts and garments ready to wear.",
-    features: ["Wrinkle-free finish", "Attention to detail", "Hanger delivery"],
-  },
-  {
     icon: Sparkles,
     title: "Specialty Items",
     description:
-      "Expert care for bedding, curtains, wedding dresses, and other special items.",
+    "Expert care for bedding, curtains, wedding dresses, and other special items.",
     features: ["Custom treatment", "Careful handling", "Preservation options"],
+  },
+  {
+    icon: Star,
+    title: "Full Service",
+    description:
+      "Crisp, professionally pressed shirts and garments ready to wear.",
+    features: ["Wrinkle-free finish", "Attention to detail", "Hanger delivery"],
   },
 ];
 
 export default function Services() {
   return (
-    <main className="flex flex-col items-center justify-center w-full min-h-screen bg-gradient-to-b from-[#c7f1f0] via-[#a0d9c9] to-[#E3F2F4] gap-10 py-20 px-6">
-      
-      <section>
-        <div className="mx-auto max-w-2xl text-center mb-16 mt-10">
-          <h2 className="font-sans text-4xl sm:text-5xl font-bold text-[#0F2027] mb-4 drop-shadow-sm">
-            Complete Laundry Solutions
-          </h2>
-          <p className="text-lg text-[#3A5A66] leading-relaxed">
-            From everyday essentials to specialty care, we handle it all with
-            precision, care, and freshness you can feel.
-          </p>
-          <div className="mt-4 h-1 w-24 bg-[#1a6e6b] mx-auto rounded-full"></div>
-        </div>
-      </section>
+    <main className="flex flex-col items-center justify-center w-full min-h-screen gap-5 py-20 px-2">
 
-      {/* Service Cards */}
       <section className="w-full flex justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl w-full">
           {services.map((service) => (
@@ -100,10 +86,6 @@ export default function Services() {
         </div>
       </section>
 
-      {/* Subtle Footer Decoration */}
-      <div className="w-full flex justify-center mt-12">
-        <div className="w-32 h-2 bg-[#1a6e6b]/40 rounded-full blur-sm"></div>
-      </div>
     </main>
   );
 }

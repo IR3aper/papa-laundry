@@ -8,12 +8,12 @@ import { collection, getDocs, onSnapshot, query, where } from "@firebase/firesto
 
 export default function Admin() {
   const [orders, setOrders] = useState([])
-  const [isReady, setIsReady] = useState(true)
+  const [isReady, setIsReady] = useState(false)
 
 
   const cardText = {
-    header: isReady ? "Orders ready" : "Orders Pending/In Process",
-    headerDesc: isReady ? "Orders ready to take" : "Active orders",
+    header: isReady ? "Finished Orders" : "Active Orders",
+    headerDesc: isReady ? "Orders that have finished processing" : "Orders that are processing/yet to be processed",
     button: isReady ? "View active orders" : "View finished orders"
   } 
 
@@ -26,8 +26,8 @@ export default function Admin() {
       try {
         const orders = collection(db, "orders")
 
-        const queryReadyOrders = query(orders, where("status", "==", "ready"))
-        const queryActiveOrders = query(orders, where("status", "==", "pending" || "in progress"))
+        const queryReadyOrders = query(orders, where("status", "in", ["ready", "completed"]))
+        const queryActiveOrders = query(orders, where("status", "in", ["pending", "processing"]))
 
         if (!isReady) {
           const showQuery = onSnapshot(queryActiveOrders, (snapshot) => {
@@ -57,7 +57,7 @@ export default function Admin() {
 
   return (
     <main className="flex flex-col items-center justify-center w-full min-h-screen p-10 gap-10">
-      <h1>Welcome Admin</h1>
+      <h1 className="text-5xl font-bold text-[#3A5A66]">Welcome, Admin</h1>
       <OrderMap orderData={orders} click={handleSwitch} header={cardText.header} headerDesc={cardText.headerDesc} button={cardText.button}/>
     </main>
   );
