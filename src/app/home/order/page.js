@@ -13,9 +13,10 @@ export default function Order() {
         </p>
       </section>
 
-      <section className="w-full max-w-3xl bg-white border border-[#BFE7E0]/50 rounded-2xl shadow-md p-8 hover:shadow-lg">
+      <section className="w-full max-w-3xl rounded-2xl p-8">
         <OrderForm />
       </section>
     </main>
   );
 }
+

@@ -60,6 +60,14 @@ export default function OrderDetails() {
                         <div>
                             Time Ordered: 9:00 am
                         </div>
+                        <div className="flex gap-5">
+                        <Button>
+                            Start Process
+                        </Button>
+                        <Button className="bg-white text-black border-3">
+                            Cancel
+                        </Button>
+                        </div>
                     </CardDescription>
 
                 </CardContent>

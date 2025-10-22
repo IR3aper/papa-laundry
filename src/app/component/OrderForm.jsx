@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { serverTimestamp } from '@firebase/firestore';
+import { serverTimestamp } from "@firebase/firestore";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,25 +12,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea"
+import { Textarea } from "@/components/ui/textarea";
 
-import db from "../utils/firestore"
-import {collection, addDoc} from '@firebase/firestore'
-
-
+import db from "../utils/firestore";
+import { collection, addDoc } from "@firebase/firestore";
 
 export default function OrderForm() {
+  const getCurrentNo = Number(localStorage.getItem("currentOrderNo"));
+  const currentNo = !getCurrentNo ? 1 : getCurrentNo;
 
-    const getCurrentNo = Number(localStorage.getItem("currentOrderNo"));
-    const currentNo = !getCurrentNo ? 1 : getCurrentNo
-
-    const [orders, setOrders] = useState([])
-    const [orderNo, setOrderNo] = useState(!currentNo ? 1 : currentNo)
-    const [orderService, setOrderService] = useState("")  
-    const [orderWeight, setOrderWeight] = useState(0)
-    const [orderNotes, setOrderNotes] = useState("")
-    const [orderCustomer, setOrderCustomer] = useState("")
-    const [orderTime, setOrderTime] = useState("")
+  const [orders, setOrders] = useState([]);
+  const [orderNo, setOrderNo] = useState(!currentNo ? 1 : currentNo);
+  const [orderService, setOrderService] = useState("");
+  const [orderWeight, setOrderWeight] = useState(0);
+  const [orderNotes, setOrderNotes] = useState("");
+  const [orderCustomer, setOrderCustomer] = useState("");
+  const [orderCustomerTel, setOrderCustomerTel] = useState("");
 
   const OPTIONS = [
     { id: "laundry_wash", label: "Regular Wash", value: "wash" },
@@ -38,38 +35,38 @@ export default function OrderForm() {
     // { id: "laundry_iron", label: "Iron", value: "iron" },
     // { id: "laundry_fold", label: "Fold", value: "fold" },
     { id: "laundry_full", label: "Full Service", value: "full" },
-    {id: "laundry_specialty", label: "Specialty Items", value: "specialty"}
+    { id: "laundry_specialty", label: "Specialty Items", value: "specialty" },
   ];
 
-
   const handleOrder = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const docref = await addDoc(collection(db, 'orders'), 
-     {
+      const docref = await addDoc(collection(db, "orders"), {
+
         orderNo: "ORDR-" + orderNo,
         service: orderService,
         weight: orderWeight,
         notes: orderNotes,
         status: "pending",
-        customer: "Juan Dela Cruz",
+        customer: orderCustomer,
+        customerTel: orderCustomerTel,
         time: new Date(),
-        amount: "$1000.00"
-     })
+      });
 
-    setOrderNo(prev => prev + 1)
-    localStorage.setItem("currentIdNo",orderNo)
-    
-     console.log("data added successfully")
+      setOrderNo((prev) => prev + 1);
+      localStorage.setItem("currentIdNo", orderNo);
+
+      console.log("data added successfully");
+    } catch (error) {
+      console.error("Error adding document" + error);
     }
-    catch(error){
-      console.error('Error adding document' + error)
-    }
-  }
+  };
 
   return (
-    <form className="flex flex-col items-center shadow-xl p-10 gap-7 text-slate-700 rounded-sm"
-          onSubmit={handleOrder}>
+    <form
+      className="flex flex-col items-center bg-white round p-10 gap-7 text-slate-700 rounded-lg"
+      onSubmit={handleOrder}
+    > 
       <h1 className="font-bold text-4xl">Book our services</h1>
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="select">Service</label>
@@ -79,8 +76,7 @@ export default function OrderForm() {
           </SelectTrigger>
           <SelectContent>
             {OPTIONS.map((option) => (
-              <SelectItem 
-              key={option.id} value={option.label}>
+              <SelectItem key={option.id} value={option.label}>
                 {option.label}
               </SelectItem>
             ))}
@@ -89,17 +85,46 @@ export default function OrderForm() {
       </div>
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="weight">Estimated Weight (in kg)</label>
-        <Input id="weight" type="number" placeholder="Enter weight" min="1"
-         onChange={e=>setOrderWeight(e.target.value)}/>
-      </div>
-      <div className="w-full flex flex-col gap-2">
-        <label htmlFor="notes">Other notes</label>
-        <Textarea id="notes" type="number" placeholder="Type here.."
-         onChange={e=>setOrderNotes(e.target.value)}
-        className="resize-none w-100 h-35" />
+        <Input
+          id="weight"
+          type="number"
+          placeholder="Enter weight"
+          min="1"
+          onChange={(e) => setOrderWeight(e.target.value)}
+        />
       </div>
 
-      <Button className="bg-emerald-500 w-full" type="submit">Book it!</Button>
+      {/* bagong input para sa name at number */}
+       <div className="flex flex-col w-full gap-2">
+        <label htmlFor="notes">Full Name</label>
+        <Input id="name" type="text" placeholder="Enter Name" min="1"
+        onChange={(e)=>setOrderCustomer(e.target.value)}
+
+         />
+
+      </div>
+
+      <div className="flex flex-col w-full gap-2">
+        <label htmlFor="notes">Contact Number</label>
+        <Input id="number" type="tel" placeholder="Enter Contact" min="1"
+        onChange={(e)=>setOrderCustomerTel(e.target.value)}
+        />
+      </div>
+    
+      <div className="w-full flex flex-col gap-2">
+        <label htmlFor="notes">Other notes</label>
+        <Textarea
+          id="notes"
+          type="number"
+          placeholder="Type here.."
+          onChange={(e) => setOrderNotes(e.target.value)}
+          className="resize-none w-full h-35"
+        />
+      </div>
+
+      <Button className="bg-emerald-500 w-full" type="submit">
+        Book it!
+      </Button>
     </form>
 
     //  <form className="flex flex-col items-center shadow-xl p-10 gap-10 text-slate-700">
